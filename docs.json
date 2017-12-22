@@ -1,0 +1,81 @@
+[
+  {
+    "name": "I18Next",
+    "comment": " This library provides a solution to load and display translations in your\napp. It allows you to load json translation files, display the text and\ninterpolate placeholders. There is also support for fallback languages if\nneeded.\n\n\n# Types and Data\n\n@docs Translations, Delims, Replacements, initialTranslations\n\n\n# Using Translations\n\n@docs t, tr, tf, trf\n\n\n# Fetching and Decoding\n\n@docs fetchTranslations, decodeTranslations\n\n",
+    "aliases": [
+      {
+        "name": "Replacements",
+        "comment": " An alias for replacements for use with placeholders. Each tuple should\ncontain the name of the placeholder as the first value and the value for\nthe placeholder as the second entry. See [`tr`](I18Next#tr) and\n[`trf`](I18Next#trf) for usage examples.\n",
+        "args": [],
+        "type": "List ( String, String )"
+      }
+    ],
+    "types": [
+      {
+        "name": "Delims",
+        "comment": " A union type for representing delimiters for placeholders. Most commonly\nthose will be `{{...}}`, or `__...__`. You can also provide a set of\ncustom delimiters(start and end) to account for different types of placeholders.\n",
+        "args": [],
+        "cases": [
+          [
+            "Curly",
+            []
+          ],
+          [
+            "Underscore",
+            []
+          ],
+          [
+            "Custom",
+            [
+              "( String, String )"
+            ]
+          ]
+        ]
+      },
+      {
+        "name": "Translations",
+        "comment": " A type that represents your loaded translations\n",
+        "args": [],
+        "cases": []
+      }
+    ],
+    "values": [
+      {
+        "name": "decodeTranslations",
+        "comment": " Decode a JSON translations file. The JSON can be arbitrarly nested, but the\nleaf values can only be strings. Use this decoder directly if you are passing\nthe translations JSON into your elm app via flags or ports. If you are\nloading your JSON file via Http use\n[`fetchTranslations`](I18Next#fetchTranslations) instead.\nAfter decoding nested values will be available with any of the translate\nfunctions separated with dots.\n\n    {- The JSON could look like this:\n    {\n      \"buttons\": {\n        \"save\": \"Save\",\n        \"cancel\": \"Cancel\"\n      },\n      \"greetings\": {\n        \"hello\": \"Hello\",\n        \"goodDay\": \"Good Day {{firstName}} {{lastName}}\"\n      }\n    }\n    -}\n\n    --Use the decoder like this on a string\n    import I18Next exposing (decodeTranslations)\n    Json.Decode.decodeString decodeTranslations \"{ \\\"greet\\\": \\\"Hello\\\" }\"\n\n    -- or on a Json.Encode.Value\n    Json.Decode.decodeValue decodeTranslations encodedJson\n\n",
+        "type": "Json.Decode.Decoder I18Next.Translations"
+      },
+      {
+        "name": "fetchTranslations",
+        "comment": " A command to load translation files. It returns a result with the decoded\ntranslations, or an error if the request or decoding failed. See\n[`decodeTranslations`](I18Next#decodeTranslations) for an example of the correct\nJSON format.\n",
+        "type": "(Result.Result Http.Error I18Next.Translations -> msg) -> String -> Platform.Cmd.Cmd msg"
+      },
+      {
+        "name": "initialTranslations",
+        "comment": " Use this to initialize Translations in your model. This may be needed\nwhen loading translations but you need to initialize your model before\nyour translations are fetched.\n",
+        "type": "I18Next.Translations"
+      },
+      {
+        "name": "t",
+        "comment": " Translate a value at a given string.\n\n    {- If your translations are { \"greet\": { \"hello\": \"Hello\" } }\n    use dots to access nested keys.\n    -}\n    import I18Next exposing (t)\n    t translations \"greet.hello\" -- \"Hello\"\n\n",
+        "type": "I18Next.Translations -> String -> String"
+      },
+      {
+        "name": "tf",
+        "comment": " Translate a value and try different fallback languages by providing a list\nof Translations. If the key you provide does not exist in the first of the list\nof languages, the function will try each language in the list.\n\n    {- Will use german if the key exist there, or fall back to english\n    if not. If the key is not in any of the provided languages the function\n    will return the key. -}\n    import I18Next exposing (tf)\n    tf [germanTranslations, englishTranslations] \"labels.greetings.hello\"\n\n",
+        "type": "List I18Next.Translations -> String -> String"
+      },
+      {
+        "name": "tr",
+        "comment": " Translate a value at a key, while replacing placeholders, and trying\ndifferent fallback languages. Check the [`Delims`](I18Next#Delims) type for\nreference how to specify placeholder delimiters.\nUse this when you need to replace placeholders.\n\n    -- If your translations are { \"greet\": \"Hello {{name}}\" }\n    import I18Next exposing (tr, Delims(..))\n    tr translations Curly \"greet\" [(\"name\", \"Peter\")]\n\n",
+        "type": "I18Next.Translations -> I18Next.Delims -> String -> I18Next.Replacements -> String"
+      },
+      {
+        "name": "trf",
+        "comment": " Combines the [`tr`](I18Next#tr) and the [`tf`](I18Next#tf) function.\nOnly use this if you want to replace placeholders and apply fallback languages\nat the same time.\n\n    -- If your translations are { \"greet\": \"Hello {{name}}\" }\n    import I18Next exposing (trf, Delims(..))\n    let\n      langList = [germanTranslations, englishTranslations]\n    in\n      trf langList Curly \"greet\" [(\"name\", \"Peter\")] -- \"Hello Peter\"\n\n",
+        "type": "List I18Next.Translations -> I18Next.Delims -> String -> I18Next.Replacements -> String"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  }
+]

@@ -1,0 +1,14 @@
+{
+  "name": "elm-docs-preview",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "elm-static-html-lib": "0.0.9-alpha.2"
+  }
+}
