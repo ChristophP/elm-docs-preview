@@ -1,3 +1,5 @@
 .elm-static-html/
 .elm-stuff/
 node_modules/
+docs_tmp.json
+dist/

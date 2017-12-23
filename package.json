@@ -4,11 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "preview": "node index.js $(node -p 'process.cwd()')",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "elm-static-html-lib": "0.0.9-alpha.2"
+    "elm-static-html-lib": "0.0.9-alpha.2",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "html-webpack-inline-source-plugin": "0.0.9",
+    "html-webpack-plugin": "^2.30.1",
+    "webpack": "^3.10.0"
   }
 }

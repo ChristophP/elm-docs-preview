@@ -1,79 +1,759 @@
 [
   {
-    "name": "I18Next",
-    "comment": " This library provides a solution to load and display translations in your\napp. It allows you to load json translation files, display the text and\ninterpolate placeholders. There is also support for fallback languages if\nneeded.\n\n\n# Types and Data\n\n@docs Translations, Delims, Replacements, initialTranslations\n\n\n# Using Translations\n\n@docs t, tr, tf, trf\n\n\n# Fetching and Decoding\n\n@docs fetchTranslations, decodeTranslations\n\n",
+    "name": "Animation",
+    "comment": " A library for animations.\n\n# Setting up an animation\n@docs State, subscription, Msg, render\n\n# Creating an animation\n@docs interrupt, queue, Step, wait, to, toWith, toWithEach, set, repeat, loop, update, style, styleWith, styleWithEach, Interpolation, spring, easing, speed\n\n# Animatable Properties\n@docs Property, opacity, Length, top, left, right, bottom, width, height, padding, paddingLeft, paddingRight, paddingTop, paddingBottom, margin, marginLeft, marginRight, marginTop, marginBottom, color, backgroundColor, borderColor, borderWidth, borderLeftWidth, borderRightWidth, borderTopWidth, borderBottomWidth, borderRadius, borderTopLeftRadius, borderTopRightRadius, borderBottomLeftRadius, borderBottomRightRadius, shadow, textShadow, insetShadow, display, inline, inlineBlock, flex, inlineFlex, block, none, listItem\n\n# Transforms\n@docs scale, scale3d, Angle, rotate, rotate3d, translate, translate3d, transformOrigin\n\n# Animatable CSS Filters\n@docs filterUrl, blur, brightness, contrast, grayscale, greyscale, hueRotate, invert, saturate, sepia, dropShadow\n\n# Animatable Svg Properties\n@docs viewBox, fill, stroke, strokeWidth, stopColor, offset, x, y, cx, cy, radius, radiusX, radiusY, points\n\n# Constructing an Svg Path\n@docs path, PathStep, move, moveTo, line, lineTo, horizontal, horizontalTo, vertical, verticalTo,  close, QuadraticCurve, curve, curveTo, CubicCurve, curve2, curve2To, arc, Arc\n\n# Units\n@docs px, percent, em, rem, turn, deg, grad, rad\n\n# Advanced\n@docs exactly, custom, custom2, customColor, attr, attr2, attr3, attr4, attrColor\n\n",
     "aliases": [
       {
-        "name": "Replacements",
-        "comment": " An alias for replacements for use with placeholders. Each tuple should\ncontain the name of the placeholder as the first value and the value for\nthe placeholder as the second entry. See [`tr`](I18Next#tr) and\n[`trf`](I18Next#trf) for usage examples.\n",
+        "name": "Arc",
+        "comment": " ",
         "args": [],
-        "type": "List ( String, String )"
+        "type": "{ x : Float , y : Float , radius : Float , startAngle : Float , endAngle : Float , clockwise : Bool }"
+      },
+      {
+        "name": "CubicCurve",
+        "comment": " ",
+        "args": [],
+        "type": "{ control1 : ( Float, Float ) , control2 : ( Float, Float ) , point : ( Float, Float ) }"
+      },
+      {
+        "name": "Interpolation",
+        "comment": " ",
+        "args": [],
+        "type": "Animation.Model.Interpolation"
+      },
+      {
+        "name": "Msg",
+        "comment": " ",
+        "args": [],
+        "type": "Animation.Model.Tick"
+      },
+      {
+        "name": "PathStep",
+        "comment": " ",
+        "args": [],
+        "type": "Animation.Model.PathCommand"
+      },
+      {
+        "name": "Property",
+        "comment": " ",
+        "args": [],
+        "type": "Animation.Model.Property"
+      },
+      {
+        "name": "QuadraticCurve",
+        "comment": " ",
+        "args": [],
+        "type": "{ control : ( Float, Float ), point : ( Float, Float ) }"
+      },
+      {
+        "name": "State",
+        "comment": " _Note_ - The compiler will refer to your `Animation.State` as `Animation.Model.Animation msg`\n",
+        "args": [],
+        "type": "Animation.Model.Animation Basics.Never"
+      },
+      {
+        "name": "Step",
+        "comment": " ",
+        "args": [],
+        "type": "Animation.Model.Step Basics.Never"
       }
     ],
     "types": [
       {
-        "name": "Delims",
-        "comment": " A union type for representing delimiters for placeholders. Most commonly\nthose will be `{{...}}`, or `__...__`. You can also provide a set of\ncustom delimiters(start and end) to account for different types of placeholders.\n",
+        "name": "Angle",
+        "comment": "\n",
         "args": [],
-        "cases": [
-          [
-            "Curly",
-            []
-          ],
-          [
-            "Underscore",
-            []
-          ],
-          [
-            "Custom",
-            [
-              "( String, String )"
-            ]
-          ]
-        ]
+        "cases": []
       },
       {
-        "name": "Translations",
-        "comment": " A type that represents your loaded translations\n",
+        "name": "Length",
+        "comment": "\n",
         "args": [],
         "cases": []
       }
     ],
     "values": [
       {
-        "name": "decodeTranslations",
-        "comment": " Decode a JSON translations file. The JSON can be arbitrarly nested, but the\nleaf values can only be strings. Use this decoder directly if you are passing\nthe translations JSON into your elm app via flags or ports. If you are\nloading your JSON file via Http use\n[`fetchTranslations`](I18Next#fetchTranslations) instead.\nAfter decoding nested values will be available with any of the translate\nfunctions separated with dots.\n\n    {- The JSON could look like this:\n    {\n      \"buttons\": {\n        \"save\": \"Save\",\n        \"cancel\": \"Cancel\"\n      },\n      \"greetings\": {\n        \"hello\": \"Hello\",\n        \"goodDay\": \"Good Day {{firstName}} {{lastName}}\"\n      }\n    }\n    -}\n\n    --Use the decoder like this on a string\n    import I18Next exposing (decodeTranslations)\n    Json.Decode.decodeString decodeTranslations \"{ \\\"greet\\\": \\\"Hello\\\" }\"\n\n    -- or on a Json.Encode.Value\n    Json.Decode.decodeValue decodeTranslations encodedJson\n\n",
-        "type": "Json.Decode.Decoder I18Next.Translations"
+        "name": "arc",
+        "comment": "\n",
+        "type": "Animation.Arc -> Animation.Model.PathCommand"
       },
       {
-        "name": "fetchTranslations",
-        "comment": " A command to load translation files. It returns a result with the decoded\ntranslations, or an error if the request or decoding failed. See\n[`decodeTranslations`](I18Next#decodeTranslations) for an example of the correct\nJSON format.\n",
-        "type": "(Result.Result Http.Error I18Next.Translations -> msg) -> String -> Platform.Cmd.Cmd msg"
+        "name": "attr",
+        "comment": " Animate a custom attribute by providing it's name, a float value, and the units it should have.\n\n\n",
+        "type": "String -> Float -> String -> Animation.Model.Property"
       },
       {
-        "name": "initialTranslations",
-        "comment": " Use this to initialize Translations in your model. This may be needed\nwhen loading translations but you need to initialize your model before\nyour translations are fetched.\n",
-        "type": "I18Next.Translations"
+        "name": "attr2",
+        "comment": "\n\n",
+        "type": "String -> ( Float, String ) -> ( Float, String ) -> Animation.Model.Property"
       },
       {
-        "name": "t",
-        "comment": " Translate a value at a given string.\n\n    {- If your translations are { \"greet\": { \"hello\": \"Hello\" } }\n    use dots to access nested keys.\n    -}\n    import I18Next exposing (t)\n    t translations \"greet.hello\" -- \"Hello\"\n\n",
-        "type": "I18Next.Translations -> String -> String"
+        "name": "attr3",
+        "comment": "\n",
+        "type": "String -> ( Float, String ) -> ( Float, String ) -> ( Float, String ) -> Animation.Model.Property"
       },
       {
-        "name": "tf",
-        "comment": " Translate a value and try different fallback languages by providing a list\nof Translations. If the key you provide does not exist in the first of the list\nof languages, the function will try each language in the list.\n\n    {- Will use german if the key exist there, or fall back to english\n    if not. If the key is not in any of the provided languages the function\n    will return the key. -}\n    import I18Next exposing (tf)\n    tf [germanTranslations, englishTranslations] \"labels.greetings.hello\"\n\n",
-        "type": "List I18Next.Translations -> String -> String"
+        "name": "attr4",
+        "comment": "\n",
+        "type": "String -> ( Float, String ) -> ( Float, String ) -> ( Float, String ) -> ( Float, String ) -> Animation.Model.Property"
       },
       {
-        "name": "tr",
-        "comment": " Translate a value at a key, while replacing placeholders, and trying\ndifferent fallback languages. Check the [`Delims`](I18Next#Delims) type for\nreference how to specify placeholder delimiters.\nUse this when you need to replace placeholders.\n\n    -- If your translations are { \"greet\": \"Hello {{name}}\" }\n    import I18Next exposing (tr, Delims(..))\n    tr translations Curly \"greet\" [(\"name\", \"Peter\")]\n\n",
-        "type": "I18Next.Translations -> I18Next.Delims -> String -> I18Next.Replacements -> String"
+        "name": "attrColor",
+        "comment": "\n",
+        "type": "String -> Color.Color -> Animation.Model.Property"
       },
       {
-        "name": "trf",
-        "comment": " Combines the [`tr`](I18Next#tr) and the [`tf`](I18Next#tf) function.\nOnly use this if you want to replace placeholders and apply fallback languages\nat the same time.\n\n    -- If your translations are { \"greet\": \"Hello {{name}}\" }\n    import I18Next exposing (trf, Delims(..))\n    let\n      langList = [germanTranslations, englishTranslations]\n    in\n      trf langList Curly \"greet\" [(\"name\", \"Peter\")] -- \"Hello Peter\"\n\n",
-        "type": "List I18Next.Translations -> I18Next.Delims -> String -> I18Next.Replacements -> String"
+        "name": "backgroundColor",
+        "comment": " ",
+        "type": "Color.Color -> Animation.Model.Property"
+      },
+      {
+        "name": "block",
+        "comment": " ",
+        "type": "Animation.DisplayMode"
+      },
+      {
+        "name": "blur",
+        "comment": " Create a CSS blur filter, these stack with other filters.\n",
+        "type": "Animation.Length -> Animation.Model.Property"
+      },
+      {
+        "name": "borderBottomLeftRadius",
+        "comment": " ",
+        "type": "Animation.Length -> Animation.Model.Property"
+      },
+      {
+        "name": "borderBottomRightRadius",
+        "comment": " ",
+        "type": "Animation.Length -> Animation.Model.Property"
+      },
+      {
+        "name": "borderBottomWidth",
+        "comment": " ",
+        "type": "Animation.Length -> Animation.Model.Property"
+      },
+      {
+        "name": "borderColor",
+        "comment": " ",
+        "type": "Color.Color -> Animation.Model.Property"
+      },
+      {
+        "name": "borderLeftWidth",
+        "comment": " ",
+        "type": "Animation.Length -> Animation.Model.Property"
+      },
+      {
+        "name": "borderRadius",
+        "comment": " ",
+        "type": "Animation.Length -> Animation.Model.Property"
+      },
+      {
+        "name": "borderRightWidth",
+        "comment": " ",
+        "type": "Animation.Length -> Animation.Model.Property"
+      },
+      {
+        "name": "borderTopLeftRadius",
+        "comment": " ",
+        "type": "Animation.Length -> Animation.Model.Property"
+      },
+      {
+        "name": "borderTopRightRadius",
+        "comment": " ",
+        "type": "Animation.Length -> Animation.Model.Property"
+      },
+      {
+        "name": "borderTopWidth",
+        "comment": " ",
+        "type": "Animation.Length -> Animation.Model.Property"
+      },
+      {
+        "name": "borderWidth",
+        "comment": " ",
+        "type": "Animation.Length -> Animation.Model.Property"
+      },
+      {
+        "name": "bottom",
+        "comment": " ",
+        "type": "Animation.Length -> Animation.Model.Property"
+      },
+      {
+        "name": "brightness",
+        "comment": " Create a CSS brightness filter, these stack with other filters.\n",
+        "type": "Float -> Animation.Model.Property"
+      },
+      {
+        "name": "close",
+        "comment": " Close a Path\n",
+        "type": "Animation.Model.PathCommand"
+      },
+      {
+        "name": "color",
+        "comment": " ",
+        "type": "Color.Color -> Animation.Model.Property"
+      },
+      {
+        "name": "contrast",
+        "comment": " Create a CSS contrast filter, these stack with other filters.\n",
+        "type": "Float -> Animation.Model.Property"
+      },
+      {
+        "name": "curve",
+        "comment": " Create a relative curve with 1 control point and a target point.\nThis is a Quadratic curve in teh svg spec.\n",
+        "type": "Animation.QuadraticCurve -> Animation.Model.PathCommand"
+      },
+      {
+        "name": "curve2",
+        "comment": " Create a relative Curve with 2 control points and a target point.\nThis is a Cubic Curve in the svg spec.\n\n",
+        "type": "Animation.CubicCurve -> Animation.Model.PathCommand"
+      },
+      {
+        "name": "curve2To",
+        "comment": " Create an absolute Curve with 2 control points and a target point.\nThis is a Cubic Curve in the svg spec.\n\n",
+        "type": "Animation.CubicCurve -> Animation.Model.PathCommand"
+      },
+      {
+        "name": "curveTo",
+        "comment": " Create an absolute curve with 1 control point and a target point.\nThis is a Quadratic curve in teh svg spec.\n",
+        "type": "Animation.QuadraticCurve -> Animation.Model.PathCommand"
+      },
+      {
+        "name": "custom",
+        "comment": " Animate a custom _style_ property by providing it's name, a float value, and the units it should have.\n",
+        "type": "String -> Float -> String -> Animation.Model.Property"
+      },
+      {
+        "name": "custom2",
+        "comment": "\n",
+        "type": "String -> ( Float, String ) -> ( Float, String ) -> Animation.Model.Property"
+      },
+      {
+        "name": "customColor",
+        "comment": "\n",
+        "type": "String -> Color.Color -> Animation.Model.Property"
+      },
+      {
+        "name": "cx",
+        "comment": " ",
+        "type": "Float -> Animation.Model.Property"
+      },
+      {
+        "name": "cy",
+        "comment": " ",
+        "type": "Float -> Animation.Model.Property"
+      },
+      {
+        "name": "deg",
+        "comment": " ",
+        "type": "Float -> Animation.Angle"
+      },
+      {
+        "name": "display",
+        "comment": " ",
+        "type": "Animation.DisplayMode -> Animation.Model.Property"
+      },
+      {
+        "name": "dropShadow",
+        "comment": " Drop shadows will ignore the shadow's `size` value.   This is just one of the bizarre quirks of CSS.\n",
+        "type": "Animation.Shadow -> Animation.Model.Property"
+      },
+      {
+        "name": "easing",
+        "comment": " Specify a custom Easing to animate with.  To be used in conjunction with `StyleWith`, `StyleWithEach`, `toWith`, and `toWithEach`.\n\nThe [elm-community/easing-functions](https://github.com/elm-community/easing-functions) package has a bunch of useful easing functions!\n\n",
+        "type": "{ duration : Time.Time, ease : Float -> Float } -> Animation.Model.Interpolation"
+      },
+      {
+        "name": "em",
+        "comment": " ",
+        "type": "Float -> Animation.Length"
+      },
+      {
+        "name": "exactly",
+        "comment": " Set a non-numerical to an exact value.  This is generally only used with `Animation.set`.\n\nFor example\n\n```\nAnimation.set\n    [ Animation.exactly \"border-style\" \"dashed\"\n    ]\n```\n\n",
+        "type": "String -> String -> Animation.Model.Property"
+      },
+      {
+        "name": "fill",
+        "comment": " ",
+        "type": "Color.Color -> Animation.Model.Property"
+      },
+      {
+        "name": "filterUrl",
+        "comment": " Create a CSS filter-url\n",
+        "type": "String -> Animation.Model.Property"
+      },
+      {
+        "name": "flex",
+        "comment": " ",
+        "type": "Animation.DisplayMode"
+      },
+      {
+        "name": "grad",
+        "comment": " ",
+        "type": "Float -> Animation.Angle"
+      },
+      {
+        "name": "grayscale",
+        "comment": " Create a CSS grayscale filter, these stack with other filters.\n",
+        "type": "Float -> Animation.Model.Property"
+      },
+      {
+        "name": "greyscale",
+        "comment": " Create a CSS grayscale filter, these stack with other filters.  This is a spelling adjusment.\n",
+        "type": "Float -> Animation.Model.Property"
+      },
+      {
+        "name": "height",
+        "comment": " ",
+        "type": "Animation.Length -> Animation.Model.Property"
+      },
+      {
+        "name": "horizontal",
+        "comment": " ",
+        "type": "Float -> Animation.Model.PathCommand"
+      },
+      {
+        "name": "horizontalTo",
+        "comment": " ",
+        "type": "Float -> Animation.Model.PathCommand"
+      },
+      {
+        "name": "hueRotate",
+        "comment": " Create a CSS hue-rotation filter, these stack with other filters.\n",
+        "type": "Animation.Angle -> Animation.Model.Property"
+      },
+      {
+        "name": "inline",
+        "comment": " ",
+        "type": "Animation.DisplayMode"
+      },
+      {
+        "name": "inlineBlock",
+        "comment": " ",
+        "type": "Animation.DisplayMode"
+      },
+      {
+        "name": "inlineFlex",
+        "comment": " ",
+        "type": "Animation.DisplayMode"
+      },
+      {
+        "name": "insetShadow",
+        "comment": " ",
+        "type": "Animation.Shadow -> Animation.Model.Property"
+      },
+      {
+        "name": "interrupt",
+        "comment": " Interrupt any running animations with the following animation.\n\n",
+        "type": "List (Animation.Model.Step msg) -> Animation.Model.Animation msg -> Animation.Model.Animation msg"
+      },
+      {
+        "name": "invert",
+        "comment": " Create a CSS invert filter, these stack with other filters.\n",
+        "type": "Float -> Animation.Model.Property"
+      },
+      {
+        "name": "left",
+        "comment": " ",
+        "type": "Animation.Length -> Animation.Model.Property"
+      },
+      {
+        "name": "line",
+        "comment": " ",
+        "type": "Float -> Float -> Animation.Model.PathCommand"
+      },
+      {
+        "name": "lineTo",
+        "comment": " ",
+        "type": "Float -> Float -> Animation.Model.PathCommand"
+      },
+      {
+        "name": "listItem",
+        "comment": " ",
+        "type": "Animation.DisplayMode"
+      },
+      {
+        "name": "loop",
+        "comment": " Repeat a number of steps until interrupted.\n",
+        "type": "List (Animation.Model.Step msg) -> Animation.Model.Step msg"
+      },
+      {
+        "name": "margin",
+        "comment": " ",
+        "type": "Animation.Length -> Animation.Model.Property"
+      },
+      {
+        "name": "marginBottom",
+        "comment": " ",
+        "type": "Animation.Length -> Animation.Model.Property"
+      },
+      {
+        "name": "marginLeft",
+        "comment": " ",
+        "type": "Animation.Length -> Animation.Model.Property"
+      },
+      {
+        "name": "marginRight",
+        "comment": " ",
+        "type": "Animation.Length -> Animation.Model.Property"
+      },
+      {
+        "name": "marginTop",
+        "comment": " ",
+        "type": "Animation.Length -> Animation.Model.Property"
+      },
+      {
+        "name": "move",
+        "comment": "\n",
+        "type": "Float -> Float -> Animation.Model.PathCommand"
+      },
+      {
+        "name": "moveTo",
+        "comment": " ",
+        "type": "Float -> Float -> Animation.Model.PathCommand"
+      },
+      {
+        "name": "none",
+        "comment": " ",
+        "type": "Animation.DisplayMode"
+      },
+      {
+        "name": "offset",
+        "comment": " Used for svg gradients.  Accepts a number between 0 and 1.\n",
+        "type": "Float -> Animation.Model.Property"
+      },
+      {
+        "name": "opacity",
+        "comment": " ",
+        "type": "Float -> Animation.Model.Property"
+      },
+      {
+        "name": "padding",
+        "comment": " ",
+        "type": "Animation.Length -> Animation.Model.Property"
+      },
+      {
+        "name": "paddingBottom",
+        "comment": " ",
+        "type": "Animation.Length -> Animation.Model.Property"
+      },
+      {
+        "name": "paddingLeft",
+        "comment": " ",
+        "type": "Animation.Length -> Animation.Model.Property"
+      },
+      {
+        "name": "paddingRight",
+        "comment": " ",
+        "type": "Animation.Length -> Animation.Model.Property"
+      },
+      {
+        "name": "paddingTop",
+        "comment": " ",
+        "type": "Animation.Length -> Animation.Model.Property"
+      },
+      {
+        "name": "path",
+        "comment": " To be used with the svg path element.  Renders as the d property.\n",
+        "type": "List Animation.Model.PathCommand -> Animation.Model.Property"
+      },
+      {
+        "name": "percent",
+        "comment": " ",
+        "type": "Float -> Animation.Length"
+      },
+      {
+        "name": "points",
+        "comment": " Used with the svg polygon element\n",
+        "type": "List ( Float, Float ) -> Animation.Model.Property"
+      },
+      {
+        "name": "px",
+        "comment": " ",
+        "type": "Float -> Animation.Length"
+      },
+      {
+        "name": "queue",
+        "comment": " Add an animation to the queue, execiting once the current animation finishes\n\n",
+        "type": "List (Animation.Model.Step msg) -> Animation.Model.Animation msg -> Animation.Model.Animation msg"
+      },
+      {
+        "name": "rad",
+        "comment": " ",
+        "type": "Float -> Animation.Angle"
+      },
+      {
+        "name": "radius",
+        "comment": " ",
+        "type": "Float -> Animation.Model.Property"
+      },
+      {
+        "name": "radiusX",
+        "comment": " ",
+        "type": "Float -> Animation.Model.Property"
+      },
+      {
+        "name": "radiusY",
+        "comment": " ",
+        "type": "Float -> Animation.Model.Property"
+      },
+      {
+        "name": "rem",
+        "comment": " ",
+        "type": "Float -> Animation.Length"
+      },
+      {
+        "name": "render",
+        "comment": " Render style properties into the style attribute and render other attributes as needed for svg.\n\nCombine \"transform\" based properties into a single css property.\n\nCombine \"filter\" based properties into a single css property.\n",
+        "type": "Animation.Model.Animation msgA -> List (Html.Attribute msgB)"
+      },
+      {
+        "name": "repeat",
+        "comment": " Repeat a number of steps `n` times.\n",
+        "type": "Int -> List (Animation.Model.Step msg) -> Animation.Model.Step msg"
+      },
+      {
+        "name": "right",
+        "comment": " ",
+        "type": "Animation.Length -> Animation.Model.Property"
+      },
+      {
+        "name": "rotate",
+        "comment": " ",
+        "type": "Animation.Angle -> Animation.Model.Property"
+      },
+      {
+        "name": "rotate3d",
+        "comment": " ",
+        "type": "Animation.Angle -> Animation.Angle -> Animation.Angle -> Animation.Model.Property"
+      },
+      {
+        "name": "saturate",
+        "comment": " Create a CSS saturate filter, these stack with other filters.\n",
+        "type": "Float -> Animation.Model.Property"
+      },
+      {
+        "name": "scale",
+        "comment": " ",
+        "type": "Float -> Animation.Model.Property"
+      },
+      {
+        "name": "scale3d",
+        "comment": " ",
+        "type": "Float -> Float -> Float -> Animation.Model.Property"
+      },
+      {
+        "name": "sepia",
+        "comment": " Create a CSS sepia filter, these stack with other filters.\n",
+        "type": "Float -> Animation.Model.Property"
+      },
+      {
+        "name": "set",
+        "comment": " Immediately set properties to a value.\n",
+        "type": "List Animation.Model.Property -> Animation.Model.Step msg"
+      },
+      {
+        "name": "shadow",
+        "comment": " ",
+        "type": "Animation.Shadow -> Animation.Model.Property"
+      },
+      {
+        "name": "speed",
+        "comment": " Specify a speed to animate with.  To be used in conjunction with `StyleWith`, `StyleWithEach`, `toWith`, and `toWithEach`.\n\nGenerally you don't want this.  It's used in the special case of the default interpolation for rotation.\n\nUse `Animation.spring` or `Animation.easing` instead as they are more powerful.\n\n",
+        "type": "{ perSecond : Float } -> Animation.Model.Interpolation"
+      },
+      {
+        "name": "spring",
+        "comment": " Specify a custom Spring to animate with.  To be used in conjunction with `StyleWith`, `StyleWithEach`, `toWith`, and `toWithEach`.\n\nThis should be your preferred interpolation to use.\n\n",
+        "type": "{ stiffness : Float, damping : Float } -> Animation.Model.Interpolation"
+      },
+      {
+        "name": "stopColor",
+        "comment": " Used for svg gradients\n",
+        "type": "Color.Color -> Animation.Model.Property"
+      },
+      {
+        "name": "stroke",
+        "comment": " ",
+        "type": "Color.Color -> Animation.Model.Property"
+      },
+      {
+        "name": "strokeWidth",
+        "comment": " ",
+        "type": "Float -> Animation.Model.Property"
+      },
+      {
+        "name": "style",
+        "comment": " Set an initial style for an animation.\n\nUses standard defaults for interpolation\n\n",
+        "type": "List Animation.Model.Property -> Animation.Model.Animation msg"
+      },
+      {
+        "name": "styleWith",
+        "comment": " Set an initial style for an animation and override the standard default for interpolation.\n\n",
+        "type": "Animation.Model.Interpolation -> List Animation.Model.Property -> Animation.Model.Animation msg"
+      },
+      {
+        "name": "styleWithEach",
+        "comment": " Set an initial style for an animation and specify the interpolation to be used for each property.\n\nAny property not listed will receive interpolation based on the standard defaults.\n",
+        "type": "List ( Animation.Model.Interpolation, Animation.Model.Property ) -> Animation.Model.Animation msg"
+      },
+      {
+        "name": "subscription",
+        "comment": " Create a subscription to AnimationFrame.times.\n\nIt is throttled based on whether the current animation is running or not.\n\n",
+        "type": "(Animation.Msg -> msgB) -> List (Animation.Model.Animation msgA) -> Platform.Sub.Sub msgB"
+      },
+      {
+        "name": "textShadow",
+        "comment": " Text shadows will ignore the shadow's `size` value.   This is just one of the bizarre quirks of CSS.\n",
+        "type": "Animation.Shadow -> Animation.Model.Property"
+      },
+      {
+        "name": "to",
+        "comment": " Animate to a set of target values, using the default interpolation.\n\n",
+        "type": "List Animation.Model.Property -> Animation.Model.Step msg"
+      },
+      {
+        "name": "toWith",
+        "comment": " Animate to a set of target values. Use a temporary interpolation instead of the default.\nThe interpolation will revert back to default after this step.\n",
+        "type": "Animation.Model.Interpolation -> List Animation.Model.Property -> Animation.Model.Step msg"
+      },
+      {
+        "name": "toWithEach",
+        "comment": " Animate to a set of target values. Use a temporary interpolation for each property instead of the default.\nThe interpolation will revert back to default after this step.\n",
+        "type": "List ( Animation.Model.Interpolation, Animation.Model.Property ) -> Animation.Model.Step msg"
+      },
+      {
+        "name": "top",
+        "comment": " ",
+        "type": "Animation.Length -> Animation.Model.Property"
+      },
+      {
+        "name": "transformOrigin",
+        "comment": " ",
+        "type": "Animation.Length -> Animation.Length -> Animation.Length -> Animation.Model.Property"
+      },
+      {
+        "name": "translate",
+        "comment": " ",
+        "type": "Animation.Length -> Animation.Length -> Animation.Model.Property"
+      },
+      {
+        "name": "translate3d",
+        "comment": " ",
+        "type": "Animation.Length -> Animation.Length -> Animation.Length -> Animation.Model.Property"
+      },
+      {
+        "name": "turn",
+        "comment": " ",
+        "type": "Float -> Animation.Angle"
+      },
+      {
+        "name": "update",
+        "comment": " Update an animation.\n",
+        "type": "Animation.Msg -> Animation.Model.Animation msg -> Animation.Model.Animation msg"
+      },
+      {
+        "name": "vertical",
+        "comment": " ",
+        "type": "Float -> Animation.Model.PathCommand"
+      },
+      {
+        "name": "verticalTo",
+        "comment": " ",
+        "type": "Float -> Animation.Model.PathCommand"
+      },
+      {
+        "name": "viewBox",
+        "comment": " ",
+        "type": "Float -> Float -> Float -> Float -> Animation.Model.Property"
+      },
+      {
+        "name": "wait",
+        "comment": " ",
+        "type": "Time.Time -> Animation.Model.Step msg"
+      },
+      {
+        "name": "width",
+        "comment": " ",
+        "type": "Animation.Length -> Animation.Model.Property"
+      },
+      {
+        "name": "x",
+        "comment": " ",
+        "type": "Float -> Animation.Model.Property"
+      },
+      {
+        "name": "y",
+        "comment": " ",
+        "type": "Float -> Animation.Model.Property"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Animation.Messenger",
+    "comment": " Import this module if you want the ability to send a Msg at any point during your animation.\n\n@docs State, update, send, Step\n\n",
+    "aliases": [
+      {
+        "name": "State",
+        "comment": " An Animation State that also tracks your `Msg` type.\n",
+        "args": [
+          "msg"
+        ],
+        "type": "Animation.Model.Animation msg"
+      },
+      {
+        "name": "Step",
+        "comment": " ",
+        "args": [
+          "msg"
+        ],
+        "type": "Animation.Model.Step msg"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "send",
+        "comment": " An animation `Step` which will send a message.  For example\n\n    Animation.interrupt\n        [ Animation.to [Animation.opacity 0]\n        , Animation.send OpacityIsNotZero\n        ]\n\n\n",
+        "type": "msg -> Animation.Model.Step msg"
+      },
+      {
+        "name": "update",
+        "comment": " An update that returns the updated animation as well as any messages sent in `Cmd` form.\n",
+        "type": "Animation.Model.Tick -> Animation.Model.Animation msg -> ( Animation.Model.Animation msg, Platform.Cmd.Cmd msg )"
+      }
+    ],
+    "generated-with-elm-version": "0.18.0"
+  },
+  {
+    "name": "Animation.Spring.Presets",
+    "comment": "\nSpring presets to be used with `Animation.styleWith` and `Animation.toWith`\n\n@docs Spring, zippy, wobbly, stiff\n\n",
+    "aliases": [
+      {
+        "name": "Spring",
+        "comment": "\n",
+        "args": [],
+        "type": "{ stiffness : Float, damping : Float }"
+      }
+    ],
+    "types": [],
+    "values": [
+      {
+        "name": "stiff",
+        "comment": "\n",
+        "type": "Animation.Spring.Presets.Spring"
+      },
+      {
+        "name": "wobbly",
+        "comment": "\n",
+        "type": "Animation.Spring.Presets.Spring"
+      },
+      {
+        "name": "zippy",
+        "comment": " The default used by elm-style-animation.\n",
+        "type": "Animation.Spring.Presets.Spring"
       }
     ],
     "generated-with-elm-version": "0.18.0"
