@@ -5,6 +5,7 @@
         data: DATA
       }
     } = htmlWebpackPlugin;
+
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -26,12 +27,15 @@
     <link href="https://fonts.googleapis.com/css?family=Great+Vibes" rel="stylesheet">
     <meta name="theme-color" content="#ffffff">
 
+    <!-- TODO: maybe self host these assets -->
+    <link rel="stylesheet" href="http://package.elm-lang.org/assets/highlight/styles/default.css?1495720958">
+    <link rel="stylesheet" href="http://package.elm-lang.org/assets/style.css?1495720958">
+    <script src="http://package.elm-lang.org/assets/highlight/highlight.pack.js?1495720958"></script>
   </head>
   <body>
     <script>
       // start app
-      window.Advent.default.create();
+      Elm.Page.PreviewDocumentation.fullscreen(<%= JSON.stringify(DATA) %>)
     </script>
-    <%= JSON.stringify(DATA) %>
   </body>
 </html>

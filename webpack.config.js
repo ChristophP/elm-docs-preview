@@ -15,7 +15,7 @@ module.exports = data => ({
   output: {
     filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
-    library: 'Advent',
+    library: 'Elm',
   },
   module: {
     rules: [

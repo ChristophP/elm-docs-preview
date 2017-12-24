@@ -5,7 +5,7 @@ const createConfig = require('./webpack.config.js');
 const { promisify } = require('util');
 
 const readFileAsync = promisify(fs.readFile);
-const docsFile = 'docs_tmp.json';
+const docsFile = 'docs.json';
 
 readFileAsync(docsFile, 'utf8').then(data => {
   const config = createConfig(JSON.parse(data));
