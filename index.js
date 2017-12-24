@@ -17,13 +17,28 @@ if (!dir) {
 
 const docsFile = 'docs_tmp.json';
 
+const handleErrors = stats => {
+  const info = stats.toJson();
+
+  if (stats.hasErrors()) {
+    info.errors.forEach(err => {
+      console.error(err);
+    });
+    process.exit(1);
+  }
+
+  if (stats.hasWarnings()) {
+    console.warn(info.warnings);
+  }
+};
+
 exec(`elm make --docs=${docsFile}`, { cwd: dir })
-  .then(console.log)
-  .then(() => fs.readFileSync(docsFile, 'utf8'))
+  .then(() => console.log(`compiling elm in ${dir}`))
+  .then(() => readFileAsync(docsFile, 'utf8'))
   .then(data => webpack(createConfig(JSON.parse(data))))
-  .then(() => console.log('webpack done'))
-  .catch(console.log)
-  .then(() => process.exit(0));
+  .then(handleErrors)
+  .then(() => console.log('writing HTML output'))
+  .catch(console.log);
 
 //readFileAsync('./docs.json')
 //.then(json => JSON.parse(json))

@@ -10,7 +10,7 @@ const isProd = process.argv.indexOf('-p') !== -1;
 
 module.exports = data => ({
   entry: {
-    bundle: './src/index.js',
+    bundle: './src/Page/PreviewDocumentation.elm',
   },
   output: {
     filename: '[name].js',
@@ -53,7 +53,7 @@ module.exports = data => ({
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: 'Advent',
+      title: 'Preview',
       template: 'src/index.html.ejs',
       filename: 'index.html',
       data,
@@ -67,7 +67,12 @@ module.exports = data => ({
       },
       inlineSource: '.(js|css)$', // embed all javascript and css inline
     }),
-    new HtmlWebpackInlineSourcePlugin(),
+    //new HtmlWebpackInlineSourcePlugin(),
     new ExtractTextPlugin('[name].css'),
   ],
+  devServer: {
+    stats: {
+      colors: true,
+    },
+  },
 });
