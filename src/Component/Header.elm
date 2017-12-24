@@ -83,7 +83,7 @@ logo =
             ]
         ]
         [ img
-            [ src "/assets/elm_logo.svg"
+            [ src "http://package.elm-lang.org/assets/elm_logo.svg"
             , style
                 [ "height" => "30px"
                 , "vertical-align" => "bottom"
