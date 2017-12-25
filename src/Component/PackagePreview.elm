@@ -155,12 +155,13 @@ instructions md =
         [ style [ "width" => "600px" ]
         ]
         [ Markdown.block md
-        , input
-            [ type_ "file"
-            , id "fileLoader"
-            , style [ "margin-left" => "1em" ]
-            ]
-            []
+
+        --, input
+        --[ type_ "file"
+        --, id "fileLoader"
+        --, style [ "margin-left" => "1em" ]
+        --]
+        --[]
         ]
 
 
