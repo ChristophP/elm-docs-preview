@@ -41,17 +41,3 @@ exec(`elm make --docs=${docsFile}`, { cwd: dir })
   .then(handleErrors)
   .then(() => console.log('writing HTML output'))
   .catch(console.log);
-
-//readFileAsync('./docs.json')
-//.then(json => JSON.parse(json))
-//.then(model => {
-//const options = { model, decoder: 'Decoder.decodeModel' };
-
-//return elmStaticHtml(
-//process.cwd(),
-//'View.view',
-//options
-//).then(generatedHtml => {
-//fs.writeFileSync('docs.html', generatedHtml);
-//});
-//});
