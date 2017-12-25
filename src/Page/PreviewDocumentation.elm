@@ -65,7 +65,13 @@ type Msg
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    ( model, Cmd.none )
+    case msg of
+        UpdatePreview subMsg ->
+            let
+                ( preview, previewCmd ) =
+                    Preview.update subMsg model.preview
+            in
+            ( { model | preview = preview }, Cmd.map UpdatePreview <| previewCmd )
 
 
 
