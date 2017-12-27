@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "node dev-server.js",
-    "preview": "node index.js $(node -p 'process.cwd()')",
+    "preview": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": { "elm-docs-preview": "./index.js" },

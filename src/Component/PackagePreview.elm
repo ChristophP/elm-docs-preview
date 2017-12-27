@@ -75,12 +75,12 @@ view model =
                 errorMsg =
                     case maybeMsg of
                         Just msg ->
-                            "Problem uploading that file: " ++ msg
+                            "Problem reading the docs file: " ++ msg
 
                         Nothing ->
-                            "Problem uploading that file, try it a different way."
+                            "Problem reading the docs file, try it a different way."
             in
-            [ instructions long
+            [ instructions short
             , p [ style [ "color" => "red" ] ] [ text errorMsg ]
             ]
 
@@ -163,24 +163,6 @@ instructions md =
         --]
         --[]
         ]
-
-
-long : String
-long =
-    """
-
-# Preview your Docs
-
-To generate documentation for your package, run this command in the root of
-your package:
-
-```bash
-elm-make --docs=documentation.json
-```
-
-That will create a file called `documentation.json`. Give me that file.
-
-"""
 
 
 short : String
