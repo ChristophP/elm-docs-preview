@@ -16,7 +16,7 @@ This will spin up a server at `http://localhost:8080`, which will serve an HTML 
 
 ## Requirements
 
-- Node version <= 8
+- Node version 8 or higher.
 - Globally installed elm compiler(If you don't have it `npm i -g elm`).
 
 ## What's happening?
