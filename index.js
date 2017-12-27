@@ -8,15 +8,13 @@ const webpack = require('webpack');
 const webpackDevServer = require('webpack-dev-server');
 const createConfig = require('./webpack.config.js');
 
-const elmStaticHtml = require('elm-static-html-lib').default;
-
 const readFileAsync = promisify(fs.readFile);
 const exec = promisify(childProcess.exec);
 
 const arg = process.argv[2];
 if (!arg) {
-  console.log('Please pass a directory name where your elm-package.json is.');
-  console.log('Example: elm-docs-preview path/to/elm-package.json');
+  console.log('Please pass a directory name, where your elm-package.json is.');
+  console.log('Example: elm-docs-preview path/to/elm-package.json\n');
   process.exit(0);
 }
 

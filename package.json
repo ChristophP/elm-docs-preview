@@ -4,15 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "node dev-server.js",
-    "preview": "node index.js",
+    "dev": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "bin": { "elm-docs-preview": "./index.js" },
+  "bin": {
+    "elm-docs-preview": "./index.js"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "elm-static-html-lib": "0.0.9-alpha.2",
     "elm-webpack-loader": "^4.4.0",
     "extract-text-webpack-plugin": "^3.0.2",
     "html-webpack-inline-source-plugin": "0.0.9",
