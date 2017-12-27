@@ -2,11 +2,10 @@ const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin');
 
 // see: https://github.com/webpack/webpack/issues/2537
 const isProd = process.argv.indexOf('-p') !== -1;
+const elmLoaderDefaults = { cwd: __dirname };
 
 module.exports = data => ({
   entry: {
@@ -17,6 +16,7 @@ module.exports = data => ({
     path: path.resolve(__dirname, 'dist'),
     library: 'Elm',
   },
+  context: __dirname,
   module: {
     rules: [
       {
@@ -25,29 +25,13 @@ module.exports = data => ({
         use: {
           loader: 'elm-webpack-loader',
           options: isProd
-            ? {}
+            ? elmLoaderDefaults
             : {
+                ...elmLoaderDefaults,
                 debug: true,
                 warn: true,
               },
         },
-      },
-      {
-        test: /\.js$/,
-        exclude: [/node_modules/],
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['env'],
-            plugins: ['transform-runtime'],
-          },
-        },
-      },
-      {
-        test: /\.css$/,
-        loader: ExtractTextPlugin.extract({
-          use: ['css-loader'],
-        }),
       },
     ],
   },
@@ -67,8 +51,6 @@ module.exports = data => ({
       },
       inlineSource: '.(js|css)$', // embed all javascript and css inline
     }),
-    //new HtmlWebpackInlineSourcePlugin(),
-    new ExtractTextPlugin('[name].css'),
   ],
   devServer: {
     stats: 'errors-only',
