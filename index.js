@@ -20,6 +20,7 @@ if (!arg) {
 
 const dir = path.resolve(arg);
 const docsFile = path.join(__dirname, '.preview-docs.json');
+const pathToElmMake = path.join(__dirname, 'node_modules/.bin/elm-make');
 
 const handleErrors = stats => {
   const info = stats.toJson();
@@ -36,8 +37,8 @@ const handleErrors = stats => {
   }
 };
 
-exec(`elm make --yes --docs=${docsFile}`, { cwd: dir })
-  .then(() => console.log(`compiling elm in ${dir}`))
+exec(`${pathToElmMake} --yes --docs=${docsFile}`, { cwd: dir })
+  .then(() => console.log(`Compiling elm in ${dir}`))
   .then(() => readFileAsync(docsFile, 'utf8'))
   .then(data => {
     const config = createConfig(JSON.parse(data));
