@@ -36,7 +36,7 @@ const handleErrors = stats => {
   }
 };
 
-exec(`elm make --docs=${docsFile}`, { cwd: dir })
+exec(`elm make --yes --docs=${docsFile}`, { cwd: dir })
   .then(() => console.log(`compiling elm in ${dir}`))
   .then(() => readFileAsync(docsFile, 'utf8'))
   .then(data => {
