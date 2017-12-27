@@ -6,7 +6,7 @@ Preview the docs for your awesome Elm libs locally. Sounds good? Just do this!
 npm i -g elm-docs-preview
 ```
 
-Then run it with a path to directory your package(which contains `elm-package.json`).
+Then run it with a path to the directory of your package (which contains `elm-package.json`).
 
 ```sh
 elm-docs-preview path/to/elm-package
