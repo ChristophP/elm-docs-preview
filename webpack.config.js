@@ -10,7 +10,7 @@ const isProd = process.argv.indexOf('-p') !== -1;
 
 module.exports = data => ({
   entry: {
-    bundle: './src/Page/PreviewDocumentation.elm',
+    bundle: path.resolve(__dirname, './src/Page/PreviewDocumentation.elm'),
   },
   output: {
     filename: '[name].js',
@@ -54,8 +54,8 @@ module.exports = data => ({
   plugins: [
     new HtmlWebpackPlugin({
       title: 'Preview',
-      template: 'src/index.html.ejs',
-      filename: 'index.html',
+      template: path.join(__dirname, 'src/index.html.ejs'),
+      filename: path.join(__dirname, 'index.html'),
       data,
       inject: 'head',
       minify: {
