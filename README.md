@@ -3,7 +3,7 @@
 Preview the docs for your awesome Elm libs locally. Sounds good? Just do this!
 
 ```sh
-npm i -D elm-docs-preview
+npm i -g elm-docs-preview
 ```
 
 Then run:
@@ -18,8 +18,8 @@ This will spin up a server, which will serve an HTML and show the compiled docs.
 
 When running `elm-docs-preview` this will
 
-- run `elm make` on your code to generate the `docs.json`.
-- then it will generate an HTML page which displays the JSON data in the format you as a package author are used to form `package.elm-lang.org`
+- run `elm make` in the directory you specified to generate the `docs.json`.
+- then it will generate an HTML page, which displays the JSON data in the format you as a package author are used to from `package.elm-lang.org`
 
 ## Room for improvement
 
