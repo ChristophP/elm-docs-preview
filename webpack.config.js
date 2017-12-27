@@ -54,8 +54,8 @@ module.exports = data => ({
   plugins: [
     new HtmlWebpackPlugin({
       title: 'Preview',
-      template: path.join(__dirname, 'src/index.html.ejs'),
-      filename: path.join(__dirname, 'index.html'),
+      template: path.resolve(__dirname, 'src/index.html.ejs'),
+      filename: 'index.html',
       data,
       inject: 'head',
       minify: {
