@@ -21,7 +21,10 @@ module.exports = data => ({
     rules: [
       {
         test: /\.elm$/,
-        exclude: [/elm-stuff/, /node_modules/],
+        exclude: [
+          path.resolve(__dirname, 'elm-stuff'),
+          path.resolve(__dirname, 'node_modules'),
+        ],
         use: {
           loader: 'elm-webpack-loader',
           options: isProd
