@@ -71,8 +71,6 @@ module.exports = data => ({
     new ExtractTextPlugin('[name].css'),
   ],
   devServer: {
-    stats: {
-      colors: true,
-    },
+    stats: 'errors-only',
   },
 });

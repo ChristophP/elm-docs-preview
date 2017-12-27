@@ -37,7 +37,6 @@ const handleErrors = stats => {
 };
 
 exec(`elm make --docs=${docsFile}`, { cwd: dir })
-  .then(e => console.log(e))
   .then(() => console.log(`compiling elm in ${dir}`))
   .then(() => readFileAsync(docsFile, 'utf8'))
   .then(data => {
@@ -49,5 +48,4 @@ exec(`elm make --docs=${docsFile}`, { cwd: dir })
     });
   })
   //.then(handleErrors)
-  //.then(() => console.log('writing HTML output'))
   .catch(console.log);
