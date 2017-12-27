@@ -31,5 +31,6 @@ When running `elm-docs-preview` this will:
 
 - As live reloading is not implementing yet you'll have to run this again everytime you make changes and wanna preview them(should watch the exposed modules of a package)
 - Code for the UI was shamelessly taken and adapted from [package.elm-lang.org](http://package.elm-lang.org/). The code likely still contains a bunch of unnecessary stuff from the original version, but this was the quickest way to make this previewer.
-- assets are still fetched from [package.elm-lang.org](http://package.elm-lang.org/) (should maybe be copied into this package so it doesn't break if the package site is down)
-- currently the server for previewing is `webpack-dev-server`. It makes generating everything very easy and I picked it mostly for comfort, but I'm not sure if there aren't better choices out there.
+- Assets are still fetched from [package.elm-lang.org](http://package.elm-lang.org/) (should maybe be copied into this package so it doesn't break if the package site is down)
+- Currently the server for previewing is `webpack-dev-server`. It makes generating everything very easy and I picked it mostly for comfort, but I'm not sure if there aren't better choices out there.
+- In some cases the links don't work yet. For simplicity everything uses hash routing but in some cases that may not be enough(i.e. when viewing module A and clicking a link to some function in Module B)
