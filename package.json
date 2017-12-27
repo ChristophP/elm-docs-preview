@@ -1,7 +1,7 @@
 {
   "name": "elm-docs-preview",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.1.0",
+  "description": "Generate and preview the docs for your awesome Elm packages",
   "main": "index.js",
   "scripts": {
     "dev": "node index.js",

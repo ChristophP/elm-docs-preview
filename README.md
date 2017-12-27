@@ -14,6 +14,11 @@ elm-docs-preview path/to/elm-package
 
 This will spin up a server at `http://localhost:8080`, which will serve an HTML and show the compiled docs.
 
+## Requirements
+
+- Node version <= 8
+- Globally installed elm compiler(If you don't have it `npm i -g elm`).
+
 ## What's happening?
 
 When running `elm-docs-preview` this will:
