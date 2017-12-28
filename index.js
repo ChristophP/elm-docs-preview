@@ -11,31 +11,9 @@ const createConfig = require('./webpack.config.js');
 const readFileAsync = promisify(fs.readFile);
 const exec = promisify(childProcess.exec);
 
-const arg = process.argv[2];
-if (!arg) {
-  console.log('Please pass a directory name, where your elm-package.json is.');
-  console.log('Example: elm-docs-preview path/to/elm-package.json\n');
-  process.exit(0);
-}
-
-const dir = path.resolve(arg);
+const dir = process.argv[2] || process.cwd();
 const docsFile = path.join(__dirname, '.preview-docs.json');
 const pathToElmMake = path.join(__dirname, 'node_modules/.bin/elm-make');
-
-const handleErrors = stats => {
-  const info = stats.toJson();
-
-  if (stats.hasErrors()) {
-    info.errors.forEach(err => {
-      console.error(err);
-    });
-    process.exit(1);
-  }
-
-  if (stats.hasWarnings()) {
-    console.warn(info.warnings);
-  }
-};
 
 exec(`${pathToElmMake} --yes --docs=${docsFile}`, { cwd: dir })
   .then(() => console.log(`Compiling elm in ${dir}`))
@@ -48,5 +26,4 @@ exec(`${pathToElmMake} --yes --docs=${docsFile}`, { cwd: dir })
       console.log('Starting server on http://localhost:8080');
     });
   })
-  //.then(handleErrors)
   .catch(console.log);
