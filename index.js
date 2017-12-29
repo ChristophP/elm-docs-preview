@@ -7,18 +7,20 @@ const childProcess = require('child_process');
 const webpack = require('webpack');
 const webpackDevServer = require('webpack-dev-server');
 const createConfig = require('./webpack.config.js');
+const pathExists = require('path-exists');
 
 const readFileAsync = promisify(fs.readFile);
 const exec = promisify(childProcess.exec);
 
 const arg = process.argv[2];
-if (!arg) {
-  console.log('Please pass a directory name, where your elm-package.json is.');
-  console.log('Example: elm-docs-preview path/to/elm-package.json\n');
+const dir = arg ? path.resolve(arg) : process.cwd();
+
+if (!pathExists.sync(path.resolve(dir, 'elm-package.json'))) {
+  console.log(`I could not find an 'elm-package.json' file in ${dir}.`);
+  console.log('Please make sure there is one.\n');
   process.exit(0);
 }
 
-const dir = path.resolve(arg);
 const docsFile = path.join(__dirname, '.preview-docs.json');
 const pathToElmMake = path.join(__dirname, 'node_modules/.bin/elm-make');
 

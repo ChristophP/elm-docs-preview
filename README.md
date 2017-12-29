@@ -9,6 +9,10 @@ npm i -g elm-docs-preview
 Then run it with a path to the directory of your package (which contains `elm-package.json`).
 
 ```sh
+# for the current directory
+elm-docs-preview
+
+# or for any directory
 elm-docs-preview path/to/elm-package
 ```
 
