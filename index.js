@@ -22,6 +22,7 @@ if (!pathExists.sync(path.resolve(dir, 'elm-package.json'))) {
 }
 
 const docsFile = path.join(__dirname, '.preview-docs.json');
+const readmeFile = path.join(__dirname, 'README.md');
 const pathToElmMake = path.join(__dirname, 'node_modules/.bin/elm-make');
 
 const handleErrors = stats => {
@@ -41,9 +42,14 @@ const handleErrors = stats => {
 
 exec(`${pathToElmMake} --yes --docs=${docsFile}`, { cwd: dir })
   .then(() => console.log(`Compiling elm in ${dir}`))
-  .then(() => readFileAsync(docsFile, 'utf8'))
-  .then(data => {
-    const config = createConfig(JSON.parse(data));
+  .then(() =>
+    Promise.all([
+      readFileAsync(docsFile, 'utf8'),
+      readFileAsync(readmeFile, 'utf8'),
+    ])
+  )
+  .then(([data, readme]) => {
+    const config = createConfig([JSON.parse(data), readme]);
     const compiler = webpack(config);
     const server = new webpackDevServer(compiler, config.devServer);
     server.listen(8080, '127.0.0.1', () => {

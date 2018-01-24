@@ -30,19 +30,26 @@ type alias Model =
 -- INIT
 
 
-readme =
-    "**Hello** this is me. ```OMG```"
+type alias Flags =
+    ( Docs.Package, String )
+
+
+flagsDecoder : Json.Decoder Flags
+flagsDecoder =
+    Json.map2 (,)
+        (Json.index 0 Docs.decodePackage)
+        (Json.index 1 Json.string)
 
 
 init : Json.Value -> ( Model, Cmd Msg )
 init value =
     let
         docs =
-            case Json.decodeValue Docs.decodePackage value of
+            case Json.decodeValue flagsDecoder value of
                 Err err ->
                     Preview.BadFile (Just <| "Could not parse file contents as Elm docs. " ++ err)
 
-                Ok dict ->
+                Ok ( dict, readme ) ->
                     Preview.GoodFile dict (Preview.docsForModule "" dict readme) readme
 
         ( header, headerCmd ) =
