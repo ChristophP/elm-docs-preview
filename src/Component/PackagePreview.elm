@@ -103,7 +103,7 @@ viewSidebar modulesNames =
     div [ class "pkg-nav" ]
         [ a [ class "pkg-nav-module", href "#", onClick (SwitchTo "") ]
             [ span
-                [ style [ ( "font-weight", "bold" ), ( "text-decoration", "underline" ) ] ]
+                [ style [ "font-weight" => "bold", "text-decoration" => "underline" ] ]
                 [ text "Readme" ]
             ]
         , ul
