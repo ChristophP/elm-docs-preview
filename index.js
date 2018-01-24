@@ -22,7 +22,7 @@ if (!pathExists.sync(path.resolve(dir, 'elm-package.json'))) {
 }
 
 const docsFile = path.join(__dirname, '.preview-docs.json');
-const readmeFile = path.join(__dirname, 'README.md');
+const readmeFile = path.resolve(dir, 'README.md');
 const pathToElmMake = path.join(__dirname, 'node_modules/.bin/elm-make');
 
 const handleErrors = stats => {
