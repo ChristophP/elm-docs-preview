@@ -15,7 +15,7 @@ import Utils.Path as Path
 
 type Model
     = BadFile (Maybe String)
-    | GoodFile (Dict.Dict String Docs.Module) PDocs.Model
+    | GoodFile (Dict.Dict String Docs.Module) PDocs.Model String
 
 
 init : Model -> ( Model, Cmd Msg )
@@ -25,13 +25,13 @@ init model =
             BadFile maybe ->
                 BadFile maybe
 
-            GoodFile docs moduleName ->
+            GoodFile docs moduleName readme ->
                 case List.head (Dict.keys docs) of
                     Nothing ->
                         BadFile (Just "The JSON you uploaded does not have any modules in it!")
 
                     Just moduleName ->
-                        GoodFile docs (docsForModule moduleName docs)
+                        GoodFile docs (docsForModule "" docs readme) readme
 
 
 
@@ -52,8 +52,8 @@ update msg model =
 
             SwitchTo moduleName ->
                 case model of
-                    GoodFile docs _ ->
-                        GoodFile docs (docsForModule moduleName docs)
+                    GoodFile docs _ readme ->
+                        GoodFile docs (docsForModule moduleName docs readme) readme
 
                     _ ->
                         model
@@ -84,7 +84,7 @@ view model =
             , p [ style [ "color" => "red" ] ] [ text errorMsg ]
             ]
 
-        GoodFile docs info ->
+        GoodFile docs info _ ->
             [ instructions short
             , div
                 [ style
@@ -101,7 +101,12 @@ view model =
 viewSidebar : List String -> Html Msg
 viewSidebar modulesNames =
     div [ class "pkg-nav" ]
-        [ ul
+        [ a [ class "pkg-nav-module", href "#", onClick (SwitchTo "") ]
+            [ span
+                [ style [ ( "font-weight", "bold" ), ( "text-decoration", "underline" ) ] ]
+                [ text "Readme" ]
+            ]
+        , ul
             [ class "pkg-nav-value" ]
             (moduleLinks modulesNames)
         ]
@@ -130,19 +135,24 @@ moduleLink moduleName =
 -- DOCS FUNCTIONS
 
 
-docsForModule : String -> Dict.Dict String Docs.Module -> PDocs.Model
-docsForModule moduleName docs =
-    case Dict.get moduleName docs of
-        Just moduleDocs ->
-            let
-                chunks =
-                    PDocs.toChunks moduleDocs
-                        |> List.map (PDocs.chunkMap PDocs.stringToType)
-            in
-            PDocs.ParsedDocs (PDocs.Info moduleName (PDocs.toNameDict docs) chunks)
+docsForModule : String -> Dict.Dict String Docs.Module -> String -> PDocs.Model
+docsForModule moduleName docs readme =
+    case moduleName of
+        "" ->
+            PDocs.Readme readme
 
-        Nothing ->
-            PDocs.Failed <| "OMG could not find module " ++ moduleName
+        _ ->
+            case Dict.get moduleName docs of
+                Just moduleDocs ->
+                    let
+                        chunks =
+                            PDocs.toChunks moduleDocs
+                                |> List.map (PDocs.chunkMap PDocs.stringToType)
+                    in
+                    PDocs.ParsedDocs (PDocs.Info moduleName (PDocs.toNameDict docs) chunks)
+
+                Nothing ->
+                    PDocs.Failed <| "OMG could not find module " ++ moduleName
 
 
 

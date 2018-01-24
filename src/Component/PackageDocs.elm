@@ -20,6 +20,7 @@ import Utils.Markdown as Markdown
 type Model
     = Failed String
     | ParsedDocs (Info Type.Type)
+    | Readme String
 
 
 type alias Info tipe =
@@ -130,6 +131,9 @@ view model =
             ParsedDocs { name, nameDict, chunks } ->
                 h1 [ class "entry-list-title" ] [ text name ]
                     :: List.map (viewChunk (Entry.typeView nameDict)) chunks
+
+            Readme readme ->
+                [ Markdown.block readme ]
 
 
 viewChunk : (Entry.Model tipe -> Html msg) -> Chunk tipe -> Html msg

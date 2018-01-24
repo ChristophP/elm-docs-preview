@@ -30,6 +30,10 @@ type alias Model =
 -- INIT
 
 
+readme =
+    "**Hello** this is me. ```OMG```"
+
+
 init : Json.Value -> ( Model, Cmd Msg )
 init value =
     let
@@ -39,7 +43,7 @@ init value =
                     Preview.BadFile (Just <| "Could not parse file contents as Elm docs. " ++ err)
 
                 Ok dict ->
-                    Preview.GoodFile dict (Preview.docsForModule "" dict)
+                    Preview.GoodFile dict (Preview.docsForModule "" dict readme) readme
 
         ( header, headerCmd ) =
             Header.init
