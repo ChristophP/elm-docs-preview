@@ -23,7 +23,6 @@ if (!pathExists.sync(path.resolve(dir, 'elm-package.json'))) {
 
 const docsFile = path.join(__dirname, '.preview-docs.json');
 const readmeFile = path.resolve(dir, 'README.md');
-const pathToElmMake = path.join(__dirname, 'node_modules/.bin/elm-make');
 
 const handleErrors = stats => {
   const info = stats.toJson();
@@ -40,7 +39,7 @@ const handleErrors = stats => {
   }
 };
 
-exec(`${pathToElmMake} --yes --docs=${docsFile}`, { cwd: dir })
+exec(`npx elm-make --yes --docs=${docsFile}`, { cwd: dir })
   .then(() => console.log(`Compiling elm in ${dir}`))
   .then(() =>
     Promise.all([
